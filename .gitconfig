@@ -1,0 +1,53 @@
+[9:27 AM] Alex Bird
+    
+;Move the following to ~/.gitconfig
+;[include]
+;  path = ~/dotfiles/.gitconfig
+;[user]
+;  name = Your Name
+;  email = your.email@address.com
+
+
+[core]
+	editor = \"C:\\Users\\vincent.cote\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe\" --wait
+	excludesfile = ~/dotfiles/.gitignore
+    attributesfile = ~/dotfiles/.gitattributes
+
+[alias]
+  ll = log --graph --pretty=format:\"%Cgreen%h\t%Cblue[%cn, %cr]\t%C(green bold)%d%Creset %s\"
+  la = !git ll --all
+  co = checkout
+  ds = difftool --staged
+  dt = difftool
+  su = submodule update --init --recursive
+  undo = reset --soft HEAD^
+  resume = !vim $(git diff --name-only --cached)
+  resume-last = !vim $(git diff HEAD^ HEAD --name-only)
+  praise = blame
+  ms = !git status && git status -s | grep -E "^UU" | awk '{ print $2 }' | xargs echo vim
+  alias = config --get-regexp ^alias\\.
+  tcr-commit = !git add -A && git commit -m 'tcr commit'
+  tcr-revert = !git reset --hard HEAD && git clean -f -d
+  tcr-commit-recursive = !git submodule foreach "git tcr-commit || true" && git tcr-commit
+  tcr-revert-recursive = !git submodule foreach "git tcr-revert || true" && git tcr-revert
+  commit-intent-wip = "!if [ ! -f .intent ]; then echo 'Missing the required .intent file'; else git commit -m \"WIP: `cat .intent`\"; fi"
+  commit-intent-final = "!if [ ! -f .intent ]; then echo 'Missing the required .intent file'; else git commit -m \"`cat .intent`\"&& rm .intent && echo \"[deleted .intent]\"; fi "
+[push]
+  default = matching
+[merge]
+  tool = vimdiff
+  conflictstyle = diff3
+  prompt = false
+[diff]
+  tool = vimdiff
+[difftool]
+  prompt = false
+  trustExitCode = true
+[mergetool]
+  trustExitCode = true
+[diff "rails-encrypted"]
+  textconv = rails encrypted:show
+  merge = binary
+  cachetextconv = false
+[commit]
+  template = ~/dotfiles/git-commit-template.txt
